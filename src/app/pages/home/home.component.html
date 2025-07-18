@@ -1,0 +1,60 @@
+<section>
+    <div class="grid md:grid-cols-[70%_minmax(0,1fr)]">
+        <div>
+            <owl-carousel-o [options]="mainSliderOptions">
+                <ng-template carouselSlide><img src="images/slider-1.png" class="w-full h-[300px]" alt=""></ng-template>
+                <ng-template carouselSlide><img src="images/slider-4.jpeg" class="w-full h-[300px]"
+                        alt=""></ng-template>
+                <ng-template carouselSlide><img src="images/slider-5.jpeg" class="w-full h-[300px]"
+                        alt=""></ng-template>
+            </owl-carousel-o>
+        </div>
+        <div>
+            <img src="images/slider-2.jpeg" class="w-full h-[150px]" alt="">
+            <img src="images/slider-3.jpeg" class="w-full h-[150px]" alt="">
+        </div>
+
+    </div>
+</section>
+
+<section>
+    <owl-carousel-o [options]="customOptions">
+
+        @for (cate of myCategory; track cate._id) {
+        <ng-template carouselSlide>
+            <img [src]="cate.image" class="w-full object-cover h-[350px]" alt="">
+            <h3 class="px-3"> {{cate.name}} </h3>
+        </ng-template>
+        }
+
+    </owl-carousel-o>
+</section>
+
+<section>
+
+    <h3>popular products:</h3>
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 ">
+        @for (prod of myProducts.slice(0,20); track prod._id ) {
+        <div class="card border border-green-400/50 rounded-md overflow-hidden shadow relative p-1">
+          <div [routerLink]="['/details' , prod._id]">
+              <div class="card-img">
+                <img [src]="prod.imageCover" class="w-full h-[250px] object-contain" alt="">
+            </div>
+            <div class="card-body px-2 py-4">
+                <h4 class="text-green-500 text-xs"> {{prod.category.name}} </h4>
+                <h3 class="font-medium"> {{prod.title.split(" ", 2).join(' ')}} </h3>
+                <div class="flex justify-between items-center">
+                    <span> {{prod.price}} EGP</span>
+                    <div class="flex items-center">
+                        <i class="fas fa-star text-yellow-300"></i>
+                        <span class="text-gray-500"> {{prod.ratingsAverage}} </span>
+                    </div>
+                </div>
+            </div>
+          </div>
+            <button class="py-2 px-4 text-white rounded-lg w-[90%] block mx-auto bg-green-700 cursor-pointer">Add to
+                cart</button>
+        </div>
+        }
+    </div>
+</section>
