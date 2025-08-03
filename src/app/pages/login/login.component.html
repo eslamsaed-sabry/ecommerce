@@ -1,9 +1,9 @@
 <section class="w-1/2 mx-auto py-5 bg-gray-400">
-    <h1 class="text-center font-medium fa-2xl text-green-600 py-3">login now</h1>
+    <h1 class="text-center font-medium fa-2xl text-green-600 py-3">{{'login.login' | translate }} </h1>
     <form [formGroup]="loginForm" (ngSubmit)="submitForm()">
 
         <div class="mb-3 px-3">
-            <label for="uEmail" class="block mb-2 text-sm font-medium text-gray-200 dark:text-white">email :</label>
+            <label for="uEmail" class="block mb-2 text-sm font-medium text-gray-200 dark:text-white">{{'login.email' | translate }}</label>
             <input formControlName="email" type="email" id="uEmail"
             class="bg-gray-50 border border-gray-300 text-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
              @if (loginForm.get('email')?.errors && loginForm.get('email')?.touched) {
@@ -31,7 +31,7 @@
             }      
         </div>
         <div class="mb-3 px-3">
-            <label for="upassword" class="block mb-2 text-sm font-medium text-gray-200 dark:text-white">password:</label>
+            <label for="upassword" class="block mb-2 text-sm font-medium text-gray-200 dark:text-white">{{'login.password' | translate }}:</label>
             <input formControlName="password" type="password" id="upassword"
             class="bg-gray-50 border border-gray-300 text-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                  @if (loginForm.get('password')?.errors && loginForm.get('password')?.touched) {
@@ -59,16 +59,12 @@
             }  
         </div>
      
-        @if (errorMes) {
-            <p class="my-3 p-4 mb-4 text-sm text-center text-red-800 rounded-lg bg-red-50 "> {{errorMes}} </p>
-        }
-        @if (succMes) {
-            <p class="my-3 p-4 mb-4 text-sm text-center text-blue-600 rounded-lg bg-blue-50 "> {{succMes}}  </p>
-        }
-        <div class="text-center">
+
+        <div class="text-center flex items-center justify-between px-5">
+            <a routerLink="/forgot">{{'login.forgotPassword' | translate }}</a>
             <button type="submit" [disabled]="isLoading" 
             class="bg-green-600 py-2 px-4 cursor-pointer rounded-2xl text-white text-center  hover:bg-green-400 transition disabled:bg-green-200 disabled:cursor-default">
-            login
+            {{'login.login' | translate }}
             @if (isLoading) {
                 <i class="fa-solid fa-spinner fa-spin"></i>
             }

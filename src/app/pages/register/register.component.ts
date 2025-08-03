@@ -2,11 +2,12 @@ import { Component, inject, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../core/services/auth/auth.service';
 import { Router } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 
 
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, TranslatePipe],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
 })
@@ -52,13 +53,7 @@ export class RegisterComponent {
               this.succMes = res.message
               setTimeout(()=>{
                 this.router.navigate(['/login'])
-              })
-              
-        }, error: (err) => {
-              this.isLoading= false;
-              console.log(err.error.message);
-              this.errorMes =err.error.message
-              
+              })     
         }
       })
     }else{

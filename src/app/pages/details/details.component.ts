@@ -1,12 +1,15 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ProductsService } from '../../core/services/product/products.service';
-import { AuthService } from '../../core/services/auth/auth.service';
 import { IProduct } from '../../shared/interface/IProduct';
+import { WishlistService } from '../../core/services/wishlist/wishlist.service';
+import { ToastrService } from 'ngx-toastr';
+import { NgClass } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-details',
-  imports: [],
+  imports: [NgClass,TranslatePipe],
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss'
 })
@@ -14,25 +17,70 @@ export class DetailsComponent implements OnInit {
 
   private readonly activatedRoute = inject(ActivatedRoute)
   private readonly productsService = inject(ProductsService)
+  private readonly wishlistService = inject(WishlistService)
+  private readonly toastrService = inject(ToastrService)
 
-  prodID : any;
-  prodData : IProduct | null=null;
-  ngOnInit(): void {
-    this.activatedRoute.paramMap.subscribe({
-      next:(res)=>{
-      this.prodID = res.get('id')
+
+  prodID: any;
+  prodData: IProduct | null = null;
+  isFavorite: boolean = false
+
+ngOnInit(): void {
+  this.activatedRoute.paramMap.subscribe({
+    next: (res) => {
+      this.prodID = res.get('id');
+
       this.productsService.getSpecifitcproduct(this.prodID).subscribe({
-        next:(res)=>{
-          this.prodData = res.data
-           
-        },
-        error:(err)=>{
-          console.log(err);
-          
-        }
-      })
+        next: (res) => {
+          this.prodData = {
+            ...res.data,
+            isFavorite: false 
+          };
 
+          this.wishlistService.getWishlist().subscribe({
+            next: (wishlistRes) => {
+              const wishlistIds = wishlistRes.data.map((item: any) => item._id);
+              if (this.prodData && wishlistIds.includes(this.prodData._id)) {
+                this.prodData.isFavorite = true;
+              }
+            }
+          });
+        }
+      });
+    }
+  });
+}
+
+
+  toggleWishlist(prod: IProduct): void {
+    prod.isFavorite = !prod.isFavorite;
+
+    if (prod.isFavorite) {
+      this.wishlistService.addProductToWishlist(prod._id).subscribe({
+        next: (res) => {
+          console.log('Added to wishlist')
+          this.toastrService.success(res.message, 'freshCart', { newestOnTop: true, progressBar: true, positionClass: 'toast-top-center' })
+        },
+      });
+    } else {
+      this.wishlistService.removeProductFromWishlist(prod._id).subscribe({
+        next: (res) => {
+          console.log('Removed from wishlist')
+          this.toastrService.info(res.message, 'freshCart', { newestOnTop: true, progressBar: true, positionClass: 'toast-top-center' })
+
+        },
+      });
+    }
+  }
+
+
+  addProductToWishlist(id: string): void {
+    this.wishlistService.addProductToWishlist(id).subscribe({
+      next: (res) => {
+        this.isFavorite = true
+        this.toastrService.success(res.message, 'freshCart', { newestOnTop: true, progressBar: true, positionClass: 'toast-top-center' })
       }
     })
+
   }
 }

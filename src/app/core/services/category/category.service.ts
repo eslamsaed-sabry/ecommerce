@@ -13,7 +13,10 @@ export class CategoryService {
   getCategory() :Observable<any>{
     return this.HttpClient.get(`${environment.baseUrl}/api/v1/categories`) 
   }
-  getSpecificCategory(id:string) :Observable<any>{
-    return this.HttpClient.get(`${environment.baseUrl}/api/v1/${id}`)
+
+  getAllSubCategoriesOnCategory(id:string):Observable<any>{
+    return this.HttpClient.get(`${environment.baseUrl}/api/v1/categories/${id}/subcategories`)
   }
+
+
 }

@@ -16,6 +16,8 @@ export interface IProduct {
   createdAt: string;
   updatedAt: string;
   id: string;
+  isFavorite?: boolean;
+
 }
 
 interface Category {
