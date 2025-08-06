@@ -17,6 +17,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 
 
+
 @Component({
   selector: 'app-home',
   imports: [CarouselModule, RouterLink, SearchPipe,TranslatePipe, FormsModule, NgClass],
