@@ -21,7 +21,8 @@
                     [ngClass]="prodData.isFavorite ? 'text-red-600' : 'text-black'" (click)="toggleWishlist(prodData)">
                 </a>
             </div>
-            <button class="py-2 px-4 text-white rounded-lg w-[90%] block mx-auto bg-green-700 cursor-pointer my-16">
+            <button (click)="addProductToCart(prodData._id)"
+             class="py-2 px-4 text-white rounded-lg w-[90%] block mx-auto bg-green-700 cursor-pointer my-16">
                 {{'productDetalis.addCart' | translate }}</button>
         </div>
     </div>

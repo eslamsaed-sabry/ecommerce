@@ -6,10 +6,12 @@ import { WishlistService } from '../../core/services/wishlist/wishlist.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgClass } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { CartService } from '../../core/services/cart/cart.service';
 
 @Component({
   selector: 'app-details',
-  imports: [NgClass,TranslatePipe],
+  imports: [NgClass, TranslatePipe],
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss'
 })
@@ -19,37 +21,41 @@ export class DetailsComponent implements OnInit {
   private readonly productsService = inject(ProductsService)
   private readonly wishlistService = inject(WishlistService)
   private readonly toastrService = inject(ToastrService)
+  private readonly ngxSpinner = inject(NgxSpinnerService)
+  private readonly cartService = inject(CartService)
+
+
 
 
   prodID: any;
   prodData: IProduct | null = null;
   isFavorite: boolean = false
 
-ngOnInit(): void {
-  this.activatedRoute.paramMap.subscribe({
-    next: (res) => {
-      this.prodID = res.get('id');
+  ngOnInit(): void {
+    this.activatedRoute.paramMap.subscribe({
+      next: (res) => {
+        this.prodID = res.get('id');
 
-      this.productsService.getSpecifitcproduct(this.prodID).subscribe({
-        next: (res) => {
-          this.prodData = {
-            ...res.data,
-            isFavorite: false 
-          };
+        this.productsService.getSpecifitcproduct(this.prodID).subscribe({
+          next: (res) => {
+            this.prodData = {
+              ...res.data,
+              isFavorite: false
+            };
 
-          this.wishlistService.getWishlist().subscribe({
-            next: (wishlistRes) => {
-              const wishlistIds = wishlistRes.data.map((item: any) => item._id);
-              if (this.prodData && wishlistIds.includes(this.prodData._id)) {
-                this.prodData.isFavorite = true;
+            this.wishlistService.getWishlist().subscribe({
+              next: (wishlistRes) => {
+                const wishlistIds = wishlistRes.data.map((item: any) => item._id);
+                if (this.prodData && wishlistIds.includes(this.prodData._id)) {
+                  this.prodData.isFavorite = true;
+                }
               }
-            }
-          });
-        }
-      });
-    }
-  });
-}
+            });
+          }
+        });
+      }
+    });
+  }
 
 
   toggleWishlist(prod: IProduct): void {
@@ -83,4 +89,18 @@ ngOnInit(): void {
     })
 
   }
+
+
+  addProductToCart(id: string): void {
+    this.ngxSpinner.show();
+    this.cartService.addProductToCart(id).subscribe({
+      next: (res) => {
+        this.toastrService.success(res.message, 'freshCart', { newestOnTop: true, progressBar: true, positionClass: 'toast-top-center' })
+        this.cartService.cartNamber.next(res.numOfCartItems)
+        this.ngxSpinner.hide()
+      }
+    })
+  }
+
+
 }
